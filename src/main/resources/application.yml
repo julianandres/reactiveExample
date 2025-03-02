@@ -1,0 +1,40 @@
+server:
+  port: 8080  # Puerto donde correrá la aplicación
+
+spring:
+  application:
+    name: reactiveExample
+
+aws:
+  dynamodb:
+    table-name: Users
+    endpoint: http://localhost:8000  # Cambia si usas AWS DynamoDB en la nube
+    region: us-east-1  # Región de AWS
+    access-key: test  # Usar valores de prueba para DynamoDB local
+    secret-key: test  # Usar valores de prueba para DynamoDB local
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userService:
+        failureRateThreshold: 50  # Si falla más del 50%, se activa el Circuit Breaker
+        slowCallRateThreshold: 50  # Si las llamadas lentas superan el 50%, se activa
+        slowCallDurationThreshold: 2s  # Llamadas mayores a 2 segundos son consideradas lentas
+        waitDurationInOpenState: 5s  # Tiempo en estado OPEN antes de intentar reintentos
+        permittedNumberOfCallsInHalfOpenState: 2  # Intentos en estado HALF-OPEN antes de decidir si cierra o abre
+        slidingWindowSize: 10  # Cuántas peticiones analizar para activar el Circuit Breaker
+        minimumNumberOfCalls: 5  # Mínimo de llamadas antes de activar las métricas
+        automaticTransitionFromOpenToHalfOpenEnabled: true  # Cambio automático a HALF-OPEN
+        recordExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+          - org.springframework.web.reactive.function.client.WebClientResponseException
+
+  retry:
+    instances:
+      userService:
+        maxAttempts: 3  # Número máximo de intentos
+        waitDuration: 2s  # Tiempo de espera entre intentos
+        retryExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
