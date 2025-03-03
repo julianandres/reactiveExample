@@ -1,7 +1,7 @@
 package com.pragma.reactiveexample.infraestructure.adapter;
 
+import com.pragma.reactiveexample.application.port.UserRepositoryPort;
 import com.pragma.reactiveexample.domain.model.User;
-import com.pragma.reactiveexample.domain.repository.UserRepository;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException;
 
 @Component
-public class UserDynamoDbAdapter implements UserRepository {
+public class UserDynamoDbAdapter implements UserRepositoryPort {
 
     private final DynamoDbTable<User> userTable;
 

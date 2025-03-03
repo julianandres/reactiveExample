@@ -1,31 +1,51 @@
 package com.pragma.reactiveexample.application.service;
 
+import com.pragma.reactiveexample.application.port.UserRepositoryPort;
+import com.pragma.reactiveexample.application.port.UserServicePort;
 import com.pragma.reactiveexample.domain.model.User;
-import com.pragma.reactiveexample.domain.repository.UserRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Service
-public class UserService {
+@AllArgsConstructor
+public class UserServiceImpl implements UserServicePort {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryPort userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @CircuitBreaker(name = "userService", fallbackMethod = "fallbackGetUserById")
     @Retry(name = "userService")
+    @Override
     public Mono<User> getUserById(String id) {
         return userRepository.getUserById(id);
     }
 
     @CircuitBreaker(name = "userService", fallbackMethod = "fallbackSaveUser")
     @Retry(name = "userService")
+    @Override
     public Mono<User> saveUser(User user) {
         return userRepository.saveUser(user);
+    }
+
+    @Override
+    public Flux<User> saveUsersBulk(Flux<User> users) {
+        return users
+                .map(user -> {
+                    user.setId(UUID.randomUUID().toString());
+                    return user;
+                })
+                .flatMap(userRepository::saveUser)
+                .doOnNext(user -> log.info("✅ Usuario guardado: {}" ,user.getName()))
+                .onErrorResume(e -> Mono.empty()); //
     }
 
     private Mono<User> fallbackGetUserById(String id, Throwable ex) {
