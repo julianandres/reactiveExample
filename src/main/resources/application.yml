@@ -8,10 +8,9 @@ spring:
 aws:
   dynamodb:
     table-name: Users
-    endpoint: http://localhost:8000  # Cambia si usas AWS DynamoDB en la nube
     region: us-east-1  # Región de AWS
-    access-key: test  # Usar valores de prueba para DynamoDB local
-    secret-key: test  # Usar valores de prueba para DynamoDB local
+    access-key: ${AWS_ACCESS_KEY}  # Usar valores de prueba para DynamoDB local
+    secret-key: ${AWS_SECRET_KEY}  # Usar valores de prueba para DynamoDB local
 
 resilience4j:
   circuitbreaker:
