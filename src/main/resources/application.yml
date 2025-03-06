@@ -1,5 +1,5 @@
 server:
-  port: 8080  # Puerto donde correrá la aplicación
+  port: 8081  # Puerto donde correrá la aplicación
 
 spring:
   application:
