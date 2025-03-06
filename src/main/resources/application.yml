@@ -1,6 +1,7 @@
 server:
   port: 8081  # Puerto donde correrá la aplicación
-
+management.endpoints.web.exposure.include: health
+management.endpoint.health.show-details: always
 spring:
   application:
     name: reactiveExample
