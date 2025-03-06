@@ -8,6 +8,7 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,12 +16,17 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserServicePort {
 
     private final UserRepositoryPort userRepository;
 
-    Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    @Autowired
+    public UserServiceImpl(UserRepositoryPort userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @CircuitBreaker(name = "userService", fallbackMethod = "fallbackGetUserById")
     @Retry(name = "userService")
