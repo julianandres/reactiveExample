@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -43,8 +44,8 @@ public class UserServiceImpl implements UserServicePort {
     }
 
     @Override
-    public Flux<User> saveUsersBulk(Flux<User> users) {
-        return users
+    public Flux<User> saveUsersBulk(List<User> users) {
+        return Flux.fromIterable(users)
                 .map(user -> {
                     user.setId(UUID.randomUUID().toString());
                     return user;

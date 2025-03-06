@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserHandler {
@@ -30,7 +34,17 @@ public class UserHandler {
     }
 
     @PostMapping(value = "/bulk", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<User> saveUsersBulk(@RequestBody Flux<User> users) {
+    public Flux<User> saveUsersBulk(@RequestBody List<User> users) {
         return userServicePort.saveUsersBulk(users);
     }
+    @GetMapping(value = "/testing", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<User> testing() {
+        List<User> users = new ArrayList<>();
+        users.add(new User("1", "John", "Doe"));
+        users.add(new User("1", "John", "Doe"));
+        users.add(new User("1", "John", "Doe"));
+        users.add(new User("1", "John", "Doe"));
+        return Flux.fromIterable(users).delayElements(Duration.ofSeconds(10));
+    }
+
 }
