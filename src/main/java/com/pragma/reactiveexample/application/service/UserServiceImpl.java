@@ -40,17 +40,17 @@ public class UserServiceImpl implements UserServicePort {
     @Retry(name = "userService")
     @Override
     public Mono<User> saveUser(User user) {
-        return userRepository.saveUser(user);
+        return Mono.just(userRepository.saveUser(user));
     }
 
     @Override
-    public Flux<User> saveUsersBulk(Flux<User> users) {
-        return users
+    public Flux<User> saveUsersBulk(List<User> users) {
+        return Flux.fromIterable(users)
                 .map(user -> {
                     user.setId(UUID.randomUUID().toString());
                     return user;
                 })
-                .flatMap(userRepository::saveUser)
+                .map(userRepository::saveUser)
                 .doOnNext(user -> log.info("✅ Usuario guardado: {}" ,user.getName()))
                 .onErrorResume(e -> Mono.empty()); //
     }

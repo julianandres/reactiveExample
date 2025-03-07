@@ -29,8 +29,8 @@ public class UserDynamoDbAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Mono<User> saveUser(User user) {
-        return Mono.fromRunnable(() -> userTable.putItem(user))
-                .thenReturn(user);
+    public User saveUser(User user) {
+        userTable.putItem(user);
+        return user;
     }
 }

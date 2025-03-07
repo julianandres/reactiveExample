@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface UserRepositoryPort {
     Mono<User> getUserById(String id);
-    Mono<User> saveUser(User user);
+    User saveUser(User user);
 }

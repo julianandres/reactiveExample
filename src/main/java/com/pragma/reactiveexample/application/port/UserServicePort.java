@@ -9,5 +9,5 @@ import java.util.List;
 public interface UserServicePort {
     Mono<User> getUserById(String id);
     Mono<User> saveUser(User user);
-    Flux<User> saveUsersBulk(Flux<User> users);  // Nuevo método para insertar en lotes
+    Flux<User> saveUsersBulk(List<User> users);  // Nuevo método para insertar en lotes
 }
