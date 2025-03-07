@@ -34,7 +34,7 @@ public class UserHandler {
     }
 
     @PostMapping(value = "/bulk", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<User> saveUsersBulk(@RequestBody List<User> users) {
+    public Flux<User> saveUsersBulk(@RequestBody Flux<User> users) {
         return userServicePort.saveUsersBulk(users);
     }
     @GetMapping(value = "/testing", produces = MediaType.TEXT_EVENT_STREAM_VALUE)

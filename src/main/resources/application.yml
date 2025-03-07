@@ -11,7 +11,7 @@ aws:
     table-name: Users
     region: us-east-1  # Región de AWS
     access-key: ${AWS_ACCESS_KEY}  # Usar valores de prueba para DynamoDB local
-    secret-key: ${AWS_SECRET_KEY}  # Usar valores de prueba para DynamoDB local
+    secret-key: ${AWS_SECRET_ACCESS_KEY}  # Usar valores de prueba para DynamoDB local
 
 resilience4j:
   circuitbreaker:
